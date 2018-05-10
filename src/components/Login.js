@@ -112,21 +112,6 @@ export default class Login extends Component {
             }}
           />
           <Text style={styles.textError}>{this.state.errorPassword}</Text>
-
-          <Text style={styles.label}>Password</Text>
-          <TextInput style={styles.textInput}
-            placeholder='Input Password'
-            placeholderTextColor='rgba(225,225,225,0.7)'
-            underlineColorAndroid='rgba(0,0,0,0)'
-            value={this.state.password}
-            onChangeText={(input) => {this._handleInputChange(input, 'password')}} 
-            onBlur={this._validatePassword} 
-            secureTextEntry
-            ref={ input => {
-              this.inputs['password'] = input;
-            }}
-          />
-          <Text style={styles.textError}>{this.state.errorPassword}</Text>
           
           <TouchableOpacity style={styles.btnSignIn} 
                       onPress={this._handleSignin}>
