@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Image, TextInput, TouchableOpacity, StyleSheet,Alert } from 'react-native';
+import { Text, View, Image, TextInput, TouchableOpacity, StyleSheet,Alert} from 'react-native';
 import { Constants } from 'expo';
 
 export default class Login extends Component {
@@ -10,17 +10,21 @@ export default class Login extends Component {
       password: '',
       errorEmail: '',
       errorPassword: '',
+      focusPassword: false
     };
+    /*
+      don’t store the reference with setState; doing so will cause an infinite loop.
+    */
+    this.inputs = {};
   }
 
+  _focusNextField(key){
+    this.inputs[key].focus();
+  }
 
-  _handleEmailChange = email => {
-    this.setState({ email });
-  };
-
-  _handlePasswordChange = password => {
-    this.setState({ password });
-  };
+  _handleInputChange(input, name){
+    this.setState({ [name]: input });
+  }
 
   _validatePassword = () => {
     let passwordLength = this.state.password.length;
@@ -80,10 +84,17 @@ export default class Login extends Component {
             placeholderTextColor='rgba(225,225,225,0.7)'
             underlineColorAndroid='rgba(0,0,0,0)'
             value={this.state.email}
-            onChangeText={this._handleEmailChange} 
+            onChangeText={(input) => {this._handleInputChange(input, 'email')}} 
             onBlur={this._validateEmail} 
             keyboardType='email-address'
             returnKeyType='next'
+            blurOnSubmit={ false }
+            onSubmitEditing={() => {
+              this._focusNextField('password');
+            }}
+            ref={ input => {
+              this.inputs['email'] = input;
+            }}
           />
           <Text style={styles.textError}>{this.state.errorEmail}</Text>
           
@@ -93,16 +104,34 @@ export default class Login extends Component {
             placeholderTextColor='rgba(225,225,225,0.7)'
             underlineColorAndroid='rgba(0,0,0,0)'
             value={this.state.password}
-            onChangeText={this._handlePasswordChange} 
+            onChangeText={(input) => {this._handleInputChange(input, 'password')}} 
             onBlur={this._validatePassword} 
             secureTextEntry
+            ref={ input => {
+              this.inputs['password'] = input;
+            }}
+          />
+          <Text style={styles.textError}>{this.state.errorPassword}</Text>
+
+          <Text style={styles.label}>Password</Text>
+          <TextInput style={styles.textInput}
+            placeholder='Input Password'
+            placeholderTextColor='rgba(225,225,225,0.7)'
+            underlineColorAndroid='rgba(0,0,0,0)'
+            value={this.state.password}
+            onChangeText={(input) => {this._handleInputChange(input, 'password')}} 
+            onBlur={this._validatePassword} 
+            secureTextEntry
+            ref={ input => {
+              this.inputs['password'] = input;
+            }}
           />
           <Text style={styles.textError}>{this.state.errorPassword}</Text>
           
-        <TouchableOpacity style={styles.btnSignIn} 
-                     onPress={this._handleSignin}>
-             <Text  style={styles.buttonTextWhite}>Sign in</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.btnSignIn} 
+                      onPress={this._handleSignin}>
+              <Text  style={styles.buttonTextWhite}>Sign in</Text>
+          </TouchableOpacity>
         
         </View>
       </View>
