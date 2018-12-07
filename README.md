@@ -2,4 +2,4 @@
 Research in React Native
 UPdate Connection
 Update while logout
-Local
+SSH from server
